@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const authMiddleware = async(req, res, next) => {
     const {authorization} = req.headers;
 
-    if(!authorization){
-        throw new UnauthorizedError('Missing token');
+    if(!authorization || !authorization.startsWith('Bearer')){
+        throw new UnauthorizedError('Authentication invalid');
     }
 
     const token = authorization.split(' ')[1];
@@ -13,7 +13,7 @@ const authMiddleware = async(req, res, next) => {
         req.user = {id: payload.userID, first_na: payload.first_name};
         next();
     } catch (error) {
-        throw new UnauthorizedError('User not authorized/authenticated');
+        return new UnauthorizedError('User not authorized/authenticated');
     }
 }
 
