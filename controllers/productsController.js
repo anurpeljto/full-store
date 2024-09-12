@@ -4,7 +4,7 @@ const {StatusCodes} = require('http-status-codes');
 
 class ProductsController  {
     getProducts = async (req, res) => {
-        const products = await ProductModel.find({});
+        const products = await ProductModel.find({}).populate('category', '_id name');
         return res.status(StatusCodes.OK).json({product: products});
     }
 
