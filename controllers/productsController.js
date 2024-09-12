@@ -4,7 +4,8 @@ const {StatusCodes} = require('http-status-codes');
 
 class ProductsController  {
     getProducts = async (req, res) => {
-        return await ProductModel.find({});
+        const products = await ProductModel.find({});
+        return res.status(StatusCodes.OK).json({product: products});
     }
 
     getProduct = async(req, res) => {
@@ -22,7 +23,7 @@ class ProductsController  {
     }
 
     createProduct = async(req, res) => {
-        const product = await ProductModel.createOne({... req.body})
+        const product = await ProductModel.create({... req.body})
         if(!product) {
             throw new BadRequestError('Unable to create product');
         }
@@ -39,3 +40,5 @@ class ProductsController  {
         return res.status(StatusCodes.OK).json({product: product});
     }
 }
+
+module.exports = ProductsController;

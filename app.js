@@ -40,8 +40,13 @@ app.use(fileUpload({useTempFiles: true}))
 
 // routers
 const authRouter = require('./routes/User');
+const productRouter = require('./routes/Products');
+const categoryRouter = require('./routes/Category');
+
 app.use('/api/v1/auth', authRouter);
-app.post('/api/upload', uploadProductImage);
+app.post('/api/upload', authMiddleware, uploadProductImage);
+app.use('/api/v1/products', productRouter);
+app.use('/api/v1/category', authMiddleware, categoryRouter);
 
 app.get('/', authMiddleware, (req, res) => {
     res.send('Works');
