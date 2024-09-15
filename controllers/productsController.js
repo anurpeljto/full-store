@@ -4,13 +4,41 @@ const {StatusCodes} = require('http-status-codes');
 
 class ProductsController  {
     getProducts = async (req, res) => {
-        const products = await ProductModel.find({}).populate('category', '_id name');
-        return res.status(StatusCodes.OK).json({product: products});
+        const {category} = req.query;
+        
+        let query = ProductModel.find().populate('category', '_id name');
+        
+        if(category){
+            query = ProductModel.find().populate({
+                path: 'category',
+                match: {
+                    name: category
+                }
+            });
+        }
+
+        const products = await query.exec();
+        const filteredProduct = products.filter(product => product.category !== null);
+        return res.status(StatusCodes.OK).json({product: filteredProduct});
     }
 
+    // getProductsByCategory = async (req, res) => {
+    //     const {category} = req.query;
+    //     console.log(category);
+    //     const products = await ProductModel.find().populate({
+    //         path: "category",
+    //         match: {name: category},
+    //     }).exec();
+
+    //     const filteredProducts = products.filter((product) => product.category !== null);
+
+
+    //     return res.status(StatusCodes.OK).json({products: filteredProducts});
+    // }
+
     getProduct = async(req, res) => {
-        const {id} = req.query;
-        const product = await ProductModel.findOne({_id: id});
+        const {id} = req.params;
+        const product = await ProductModel.findOne({_id: id}).populate('category', '_id name');;
         if (!id){
             throw new BadRequestError('Missing or invalid product id')
         }
