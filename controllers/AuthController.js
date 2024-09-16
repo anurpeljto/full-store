@@ -1,5 +1,6 @@
 const {StatusCodes} = require('http-status-codes');
 const {BadRequestError} = require('../errors/index');
+const jwt = require ('jsonwebtoken');
 
 const UserModel = require('../models/UserModel');
 class AuthController {
@@ -15,6 +16,11 @@ class AuthController {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({success: false, msg: 'Failed to create user'});
         }
         const token = await user.createToken();
+
+        res.cookie('jwt_token', token, {
+            httpOnly: true,
+            maxAge: 3600000
+        });
         return res.status(StatusCodes.CREATED).json({success: true, user: user, token: token});
     }
 
@@ -48,6 +54,22 @@ class AuthController {
         const {email: userEmail} = req.body;
         const user = await UserModel.findOneAndUpdate({email: userEmail}, req.body, {runValidators: true, new: true})
         return res.status(StatusCodes.OK).json({success: true, user: user});
+    }
+
+    checkAuth = async(req, res) => {
+        console.log(req.cookies);
+        const token = req.cookies.jwt_token;
+        if(token){
+            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+                if(err){
+                    return res.status(StatusCodes.BAD_REQUEST).json({authenticated: false});
+                }
+                return res.status(StatusCodes.OK).json({authenticated: true});
+            
+            })
+        } else {
+            return res.status(401).json({ authenticated: false });
+        }
     }
 }
 

@@ -7,5 +7,6 @@ const AuthController = new AuthControllerClass();
 
 router.route('/register').post(AuthController.register);
 router.route('/login').post(AuthController.login);
+router.route('/check-auth').get(AuthController.checkAuth);
 
 module.exports = router;

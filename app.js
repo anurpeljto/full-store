@@ -3,6 +3,7 @@ require('express-async-errors');
 const express = require('express');
 const app = express();
 const connectDB = require('./db/connectDB');
+const cookieParser = require('cookie-parser');
 
 // security
 
@@ -32,10 +33,14 @@ app.use(rateLimiter({
 
 app.use(express.json());
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 app.use(xss());
 
 app.use(fileUpload({useTempFiles: true}))
+app.use(cookieParser());
 
 
 // routers
@@ -57,7 +62,7 @@ app.get('/', authMiddleware, (req, res) => {
 app.use(errorHandlerMiddleware);
 
 
-const PORT = 3000 || process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const start = async() => {
     try {
         await connectDB();
