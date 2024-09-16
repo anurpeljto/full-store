@@ -37,6 +37,10 @@ class AuthController {
             throw new BadRequestError('Incorrect password');
         }
         const token = user.createToken();
+        res.cookie('jwt_token', token, {
+            httpOnly: true,
+            maxAge: 3600000
+        });
         return res.status(StatusCodes.OK).json({success: true, msg: 'Successfully logged in', token});
     }
 
