@@ -4,7 +4,7 @@ const {StatusCodes} = require('http-status-codes');
 
 class ProductsController  {
     getProducts = async (req, res) => {
-        const {category} = req.query;
+        const {category, search} = req.query;
         
         let query = ProductModel.find().populate('category', '_id name');
         
@@ -15,6 +15,14 @@ class ProductsController  {
                     name: category
                 }
             });
+        }
+
+        if(search) {
+            query = query.find({
+                $or: [
+                    { name: { $regex: `^${search}`, $options: 'i' } }
+                ]
+            })
         }
 
         const page = Number(req.query.page) || 1;
