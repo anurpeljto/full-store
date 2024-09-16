@@ -17,20 +17,18 @@ class ProductsController  {
             });
         }
 
-
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 12;
         const skip = (page-1) * limit;
-
         query = query.skip(skip).limit(limit);
 
-        let products = await query.exec();
-        const filteredProduct = products.filter(product => product.category !== null);
+        const products = await query.exec();
 
-        const totalProducts = await ProductModel.countDocuments({});
+
+        const totalProducts = await ProductModel.countDocuments(query.getFilter());
 
         const numOfPages = Math.ceil(totalProducts/limit); 
-        return res.status(StatusCodes.OK).json({product: filteredProduct, numOfPages});
+        return res.status(StatusCodes.OK).json({product: products, numOfPages});
     }
 
     // getProductsByCategory = async (req, res) => {
