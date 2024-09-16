@@ -19,15 +19,27 @@ class ProductsController  {
 
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 12;
-        const skip = (page-1) * limit;
+        const skip = (page - 1) * limit;
+
         query = query.skip(skip).limit(limit);
 
-        const products = await query.exec();
+        let totalProductsQuery = ProductModel.find();
+        if (category) {
+            totalProductsQuery = totalProductsQuery.populate({
+                path: 'category',
+                match: { name: category },
+            });
+        }
 
+        let allProducts = await totalProductsQuery.exec();
+        allProducts = allProducts.filter((product) => product.category !== null);
+        const totalProducts = allProducts.length;
 
-        const totalProducts = await ProductModel.countDocuments(query.getFilter());
+        let products = await query.exec();
+        products = products.filter((product) => product.category !== null);
 
-        const numOfPages = Math.ceil(totalProducts/limit); 
+        const numOfPages = Math.ceil(totalProducts / limit); 
+
         return res.status(StatusCodes.OK).json({product: products, numOfPages});
     }
 
