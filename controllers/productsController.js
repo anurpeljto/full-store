@@ -17,13 +17,11 @@ class ProductsController  {
             });
         }
 
-        if(search) {
+        if (search) {
             query = query.find({
-                $or: [
-                    { name: { $regex: `^${search}`, $options: 'i' } }
-                ]
-            })
-        }
+              name: { $regex: `^${search}`, $options: 'i' },
+            });
+          }
 
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 12;
@@ -39,16 +37,15 @@ class ProductsController  {
             });
         }
 
-        let allProducts = await totalProductsQuery.exec();
-        allProducts = allProducts.filter((product) => product.category !== null);
-        const totalProducts = allProducts.length;
+        const totalProductsList = await totalProductsQuery.exec();
+        const totalProducts = totalProductsList.filter(product => product.category !== null).length;
 
         let products = await query.exec();
-        products = products.filter((product) => product.category !== null);
+        products = products.filter(product => product.category !== null);
 
-        const numOfPages = Math.ceil(totalProducts / limit); 
+        const numOfPages = Math.ceil(totalProducts / limit);
 
-        return res.status(StatusCodes.OK).json({product: products, numOfPages});
+        return res.status(StatusCodes.OK).json({ products, numOfPages });
     }
 
     // getProductsByCategory = async (req, res) => {
