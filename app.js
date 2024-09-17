@@ -18,6 +18,7 @@ const authMiddleware = require('./middleware/auth');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 const fileUpload = require('express-fileupload');
 const uploadProductImage = require('./controllers/uploadsController');
+const authHeaders = require('./middleware/authHeaders');
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
