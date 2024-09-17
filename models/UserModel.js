@@ -44,7 +44,7 @@ UserSchema.methods.comparePasswords = async function(inputPassword) {
 }
 
 UserSchema.methods.createToken = function() {
-    const token = jwt.sign({first_name: this.first_name, last_name: this.last_name, userID: this._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_LIFETIME});
+    const token = jwt.sign({first_name: this.first_name, last_name: this.last_name, userID: this._id, email: this.email}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_LIFETIME});
     return token;
 }
 
