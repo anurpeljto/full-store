@@ -37,11 +37,15 @@ class AuthController {
             throw new BadRequestError('Incorrect password');
         }
         const token = user.createToken();
+        let first_name = '';
+        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+            first_name = decodedToken.first_name;
+        })
         res.cookie('jwt_token', token, {
             httpOnly: true,
             maxAge: 3600000
         });
-        return res.status(StatusCodes.OK).json({success: true, msg: 'Successfully logged in', token});
+        return res.status(StatusCodes.OK).json({success: true, msg: 'Successfully logged in', token, first_name});
     }
 
     removeUser = async(req, res) => {
@@ -64,7 +68,7 @@ class AuthController {
         console.log(req.cookies);
         const token = req.cookies.jwt_token;
         if(token){
-            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            jwt.verify(token, process.env.JWT_SECRET, (err) => {
                 if(err){
                     return res.status(StatusCodes.BAD_REQUEST).json({authenticated: false});
                 }
