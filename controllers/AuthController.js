@@ -1,5 +1,5 @@
 const {StatusCodes} = require('http-status-codes');
-const {BadRequestError} = require('../errors/index');
+const {BadRequestError, UnauthorizedError} = require('../errors/index');
 const jwt = require ('jsonwebtoken');
 
 const UserModel = require('../models/UserModel');
@@ -78,6 +78,15 @@ class AuthController {
         } else {
             return res.status(401).json({ authenticated: false });
         }
+    }
+
+    getUser = async(req, res) => {
+        const token = req.cookies.jwt_token;
+        if(!token) {
+            throw new UnauthorizedError('No token found!');
+        }
+        const user = jwt.decode(token);
+        res.status(200).json({success: true, user});
     }
 }
 
