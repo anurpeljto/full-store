@@ -20,6 +20,11 @@ class CategoryController {
 
         return res.status(StatusCodes.OK).json({category});
     }
+
+    getCategories = async(req, res) => {
+        const categories = await CategoryModel.find({});
+        return res.status(200).json({categories});
+    }
 }
 
 module.exports = CategoryController;
