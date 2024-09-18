@@ -14,10 +14,14 @@ const ProductSchema = mongoose.Schema({
         required: [true, 'Category is required']
     },
 
-    image: {
-        type: String,
-        required: true,
-    },
+    image: [
+        {
+            src: {
+                type: String,
+                required: true
+            }
+        }
+    ],
 
     price: {
         type: String,
