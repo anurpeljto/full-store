@@ -6,15 +6,12 @@ class ProductsController  {
     getProducts = async (req, res) => {
         const {category, search} = req.query;
         
-        let query = ProductModel.find().populate('category', '_id name');
-        
-        if(category){
-            query = ProductModel.find().populate({
-                path: 'category',
-                match: {
-                    name: category
-                }
-            });
+        let query = ProductModel.find().populate();
+
+        if (category) {
+            query = query.find({
+                category: category
+            })
         }
 
         if (search) {
@@ -28,24 +25,15 @@ class ProductsController  {
         const skip = (page - 1) * limit;
 
         query = query.skip(skip).limit(limit);
-
-        let totalProductsQuery = ProductModel.find();
-        if (category) {
-            totalProductsQuery = totalProductsQuery.populate({
-                path: 'category',
-                match: { name: category },
-            });
-        }
-
-        const totalProductsList = await totalProductsQuery.exec();
-        const totalProducts = totalProductsList.filter(product => product.category !== null).length;
-
         let products = await query.exec();
-        products = products.filter(product => product.category !== null);
 
+        const totalProducts = products.filter(product => product.category !== null).length;
+
+        // products = products.filter(product => product.category !== null);
+        console.log(products);
         const numOfPages = Math.ceil(totalProducts / limit);
 
-        return res.status(StatusCodes.OK).json({ products, numOfPages });
+        return res.status(StatusCodes.OK).json({ products: products, numOfPages });
     }
 
     // getProductsByCategory = async (req, res) => {

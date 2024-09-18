@@ -50,7 +50,7 @@ const productRouter = require('./routes/Products');
 const categoryRouter = require('./routes/Category');
 
 app.use('/api/v1/auth', authRouter);
-app.post('/api/upload', authMiddleware, uploadProductImage);
+app.post('/api/v1/upload', authMiddleware, uploadProductImage);
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/category', authMiddleware, categoryRouter);
 
