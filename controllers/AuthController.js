@@ -21,7 +21,7 @@ class AuthController {
             httpOnly: true,
             maxAge: 3600000,
             path: '/',
-            sameSite: 'None'
+            sameSite: 'none'
         });
         return res.status(StatusCodes.CREATED).json({success: true, user: user, token: token});
     }
@@ -47,7 +47,7 @@ class AuthController {
             httpOnly: true,
             maxAge: 3600000,
             path: '/',
-            sameSite: 'None'
+            sameSite: 'none'
         });
         return res.status(StatusCodes.OK).json({success: true, msg: 'Successfully logged in', token, first_name});
     }
