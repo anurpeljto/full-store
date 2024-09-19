@@ -19,6 +19,20 @@ class ProductsController  {
               name: { $regex: `^${search}`, $options: 'i' },
             });
           }
+        
+        let total = ProductModel.find().populate();
+
+        if (category) {
+            total = total.find({
+                category: category
+            })
+        }
+
+        if (search) {
+            total = total.find({
+              name: { $regex: `^${search}`, $options: 'i' },
+            });
+          }
 
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 12;
@@ -27,11 +41,12 @@ class ProductsController  {
         query = query.skip(skip).limit(limit);
         let products = await query.exec();
 
-        const totalProducts = products.filter(product => product.category !== null).length;
-
+        const totalProducts = await total.exec();
+        const totalProductsLength = totalProducts.length;
         // products = products.filter(product => product.category !== null);
-        console.log(products);
-        const numOfPages = Math.ceil(totalProducts / limit);
+        console.log(totalProductsLength);
+        const numOfPages = Math.ceil(totalProductsLength / limit);
+        console.log('num of pages: ', numOfPages);
 
         return res.status(StatusCodes.OK).json({ products: products, numOfPages });
     }
