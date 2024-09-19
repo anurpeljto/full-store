@@ -21,8 +21,6 @@ class AuthController {
             httpOnly: true,
             maxAge: 3600000,
             path: '/',
-            sameSite: 'none',
-            secure: true,
             domain: '.onrender.com'
         });
         return res.status(StatusCodes.CREATED).json({success: true, user: user, token: token});
@@ -49,8 +47,6 @@ class AuthController {
             httpOnly: true,
             maxAge: 3600000,
             path: '/',
-            sameSite: 'none',
-            secure: true,
             domain: '.onrender.com'
         });
         return res.status(StatusCodes.OK).json({success: true, msg: 'Successfully logged in', token, first_name});
