@@ -34,7 +34,7 @@ app.use(rateLimiter({
 
 app.use(express.json());
 app.use(helmet());
-const allowedOrigins = ['http://localhost:5173', 'https://full-store.onrender.com'];
+const allowedOrigins = ['https://full-store.onrender.com', ['https://store-frontend-8dwl.onrender.com']];
 app.use(cors({
     origin: function(origin, callback) {
         if (!origin) return callback(null, true);
