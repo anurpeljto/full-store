@@ -34,8 +34,17 @@ app.use(rateLimiter({
 
 app.use(express.json());
 app.use(helmet());
+const allowedOrigins = ['http://localhost:5173', 'https://full-store.onrender.com'];
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: function(origin, callback) {
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 app.use(xss());
