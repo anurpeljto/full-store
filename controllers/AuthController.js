@@ -86,7 +86,8 @@ class AuthController {
     }
 
     getUser = async(req, res) => {
-        const token = req.headers.authorization;
+        const {authorization} = req.headers;
+        const token = authorization.split('')[1];
         if(!token) {
             throw new UnauthorizedError('No token found!');
         }
