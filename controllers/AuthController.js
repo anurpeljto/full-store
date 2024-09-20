@@ -70,7 +70,8 @@ class AuthController {
 
     checkAuth = async(req, res) => {
         console.log(req.cookies);
-        const token = req.cookies.jwt_token;
+        const {authorization} = req.headers;
+        const token = authorization.split('')[1];
         if(token){
             jwt.verify(token, process.env.JWT_SECRET, (err) => {
                 if(err){
