@@ -71,7 +71,7 @@ class AuthController {
     checkAuth = async(req, res) => {
         console.log(req.cookies);
         const {authorization} = req.headers;
-        const token = authorization.split('')[1];
+        const token = authorization.split(' ')[1];
         if(token){
             jwt.verify(token, process.env.JWT_SECRET, (err) => {
                 if(err){
@@ -87,7 +87,7 @@ class AuthController {
 
     getUser = async(req, res) => {
         const {authorization} = req.headers;
-        const token = authorization.split('')[1];
+        const token = authorization.split(' ')[1];
         if(!token) {
             throw new UnauthorizedError('No token found!');
         }
