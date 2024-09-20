@@ -85,7 +85,7 @@ class AuthController {
     }
 
     getUser = async(req, res) => {
-        const token = req.cookies.jwt_token;
+        const token = req.headers.authorization;
         if(!token) {
             throw new UnauthorizedError('No token found!');
         }
